@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<a href="index.html">BACK</a>
+<h2><b>Upload Properties File</b> Section</h2>
+<p>OPTIONAL STEP.Upload Properties file is a convenient mechanism to specify your own environment information in a <a href="exampleProperties.xml">compatible XML file</a> 
+   Before you upload the XML file, make sure you have deployed the public SSH key to the server where your application is running.
+   FYI, the Logging Webapp running on Leiden Spoke (wmsubicirc03dxle.dev.oclc.org) expects the following public key to be available on the servers : <br>
+   
+   <b>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7urNDjNa8jezgY3dqFNr482qBtMcrwUwn64O2Z5rjZc3c/WC4C6QKR0Q1iwlMZmRf4F+NxfG2b4MnHMwAyIhdKEducfm0Ol1swCzjT7QdoRSKlNUUfHM2YoEwhjs9ukHb2tWM9piWNpibj7TSRiveI1CmMA3jECGSM/zKA+4I1aRHjmb28kiCGYCfnJ5suD2tfWjamnYgVgmLBkeGTQMIHi/I2b05f8PYGvoo2JBj/u6h9xuNjpI5JjeaIpeQCdOVhyUBx0kjOYd2D4mpHST+ufud2ijvFfZddrOI3PjUuaeKHcyLym2yth4oW4E9QSuuqD/98ogUrskTToivZy0/ logging-tool</b>
+   <br>
+   Once you have uploaded the properties file you will notice that the Environment name drop down in the <b>Basic Search Criteria</b> will now show your uploaded environment information.
+   <br>
+   This information is maintained for the entire user session and is lost once the session is closed.
+   <B>NOTE: This step is optional and is there for the user to specify extra environment properties at runtime, apart from the already existing environment properties. 
+</p>
+<a href="index.html">BACK</a>
+<h2><b>Basic Search Criteria</b> Section</h2>
+This section lets you choose the Environment information from where you want to fetch/aggregate the logs.
+This is how it works :
+<ul>
+    <li>A user first selects one of the available environments.
+    <li>He then selects the available Applications
+    <li>Next he selects one or more components. 
+    <br><b>NOTE</b>: A user can select more than one components, in which case the Logging Framework will combine the results into one.
+    <br><b>NOTE</b>: For any action that needs to be performed the user has to provide values for the above criteria.
+    <li>Finally, a user can then decide to generate one of the 3 available reports :
+        <ol>
+            <li><b>Unique Exception Names report</b> : which fetches the Unique Names of the Exceptions that occurred in the selected components.
+            <li><b>Exception and Count report</b> : which fetches the Unique Names of the Exceptions that occurred in the selected components and how many times the exception occurred.
+            <li><b>Truncated Exception report</b> : which fetches the Truncated Exceptions that occurred in the selected components
+        </ol>
+</ul>
+<a href="index.html">BACK</a>
+ <h2><b>Extended Search Criteria</b> Section</h2>
+ This section allows a user to enter any arbitrary expression in the input box and search for it in the log files of the selected components. A user can provide either a constant expression like a Request Id (VDX-AHX-WEF) or a regular expression.
+ In case the user wants to search based on a regular expression, he should tick the <b>is regular expression </b>checkbox.
+ <br>
+ <a href="index.html">BACK</a>
+ <h2>Fetch Exception Trace</h2>
+ Fetch Exception Trace is a quick mechanism to fetch the exception stack trace given an exception name. The exception is searched for in the log files of all the selected components and then shown to the end user.
+ A user has the following extra options to refine the search for an exception trace:
+ <ol>
+    <li> Start Date : A user can specify the start date/time for searching the exception. It defaults to todays date. The accepted formats are
+    <ol>
+        <li> <B>yyyy-mm-dd</B>
+        <li> <B>yyyy-mm-dd HH</B>
+        <li> <B>yyyy-mm-dd HH:mm</B>
+        <li> <B>yyyy-mm-dd HH:mm:ss</B>
+        <li> <B>yyyy-mm-dd HH:mm:ss.SSS</B>
+    </ol>
+    <li> End Date : A user can specify the end date/time for stopping the search for the exception. It defaults to now. The accepted formats are same as above.
+    <li> Lines Before Exception : How many lines should be fetched from the logs BEFORE the exception was logged. Defaults to ZERO.
+    <li> Lines After Exception : How many lines should be fetched from the logs AFTER the exception was logged. Defaults to 100.
+ </ol>
+ <a href="index.html">BACK</a>
+</body>
+</html>

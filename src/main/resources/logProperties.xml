@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wms:Logging xmlns:wms="urn:org:oclc:LOGGING:1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="urn:org:oclc:LOGGING:1.0 logPropertiesSchema.xsd">
+
+   <wms:BaseDirForLogFiles>base/local-path/where/logs/will/be/downloaded</wms:BaseDirForLogFiles>
+   <wms:downloadLogsIntervalInMin>60</wms:downloadLogsIntervalInMin>
+   
+   <wms:Env name="Production">
+       <wms:Application name="App 1">
+            <wms:Profile name="App 1 Instance 1">
+                <wms:host>host.example.com</wms:host>   
+                <wms:port>8081</wms:port>  <!-- Port where the logs should be available -->           
+            </wms:Profile>
+            <wms:Profile name="App 1 Instance 2">
+                <wms:host>host2.example.com</wms:host>   
+                <wms:port>8007</wms:port>             
+            </wms:Profile>
+       </wms:Application>
+   </wms:Env>
+ </wms:Logging>

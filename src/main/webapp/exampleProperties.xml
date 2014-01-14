@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wms:Logging xmlns:wms="urn:org:oclc:LOGGING:1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="urn:org:oclc:LOGGING:1.0 logPropertiesSchema.xsd">
+   
+   <wms:Env name="Continuous Integration">
+       <wms:Application name="Circulation">
+          <wms:Profile name="Circ UI">
+              <wms:logFile>/prod/circ-ui-msi-webapp/prod/logs/webapp-out.log</wms:logFile>
+              <wms:logFile>/prod/circ-ui-msi-webapp/prod/logs/webapp-err.log</wms:logFile>
+              <wms:host>circui020ws01dxdu.dev.oclc.org</wms:host>
+              <wms:username>wmstest</wms:username>
+          </wms:Profile>
+          <wms:Profile name="Circ BL">
+              <wms:logFile>/prod/circ-business-webapp/prod/logs/webapp-out.log</wms:logFile>
+              <wms:logFile>/prod/circ-business-webapp/prod/logs/webapp-err.log</wms:logFile>
+              <wms:host>circbl020ws01dxdu.dev.oclc.org</wms:host>
+              <wms:username>wmstest</wms:username>
+          </wms:Profile>
+          
+       </wms:Application>
+    </wms:Env>
+    <wms:Env name="Leiden Spoke">
+       <wms:Application name="Circulation">
+          <wms:Profile name="Circ UI">
+              <wms:logFile>/lgb/ubi/log/circ-ui-msi-webapp/logs/webapp-out.log</wms:logFile>
+              <wms:logFile>/lgb/ubi/log/circ-ui-msi-webapp/logs/webapp-err.log</wms:logFile>
+              <wms:host>wmsubicirc02dxle.dev.oclc.org</wms:host>
+              <wms:username>circdev</wms:username>
+          </wms:Profile>
+          <wms:Profile name="Circ BL">
+              <wms:logFile>/lgb/ubi/log/circ-business-webapp/logs/webapp-out.log</wms:logFile>
+              <wms:logFile>/lgb/ubi/log/circ-business-webapp/logs/logs/webapp-err.log</wms:logFile>
+              <wms:host>wmsubicirc01dxle.dev.oclc.org</wms:host>
+              <wms:username>circdev</wms:username>
+          </wms:Profile>
+          
+       </wms:Application>
+    </wms:Env>
+    
+ </wms:Logging>

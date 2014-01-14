@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="common.css">
+<title>WMS Log Aggregation</title>
+<script src="js/angular-file-upload-shim.js"></script>
+<script type="text/javascript">
+// load angularjs specific version
+var angularVersion = window.location.hash.substring(1);
+document.write('<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/' + (angularVersion || '1.2.0') + '/angular.js"><\/script>');
+</script>
+<script src="js/angular-file-upload.js"></script>
+<script src="js/upload.js"></script>
+<!-- <script src="loggingController.js"></script>  -->
+<link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="style.css">
+<!-- <script src="http://cdn.jsdelivr.net/angular.file-upload/1.0.0/angular-file-upload.min.js"></script> -->
+</head>
+<div class="ng-v">
+        <a href="help.html">Help Section</a>
+        
+    </div>
+<body ng-app="fileUpload" ng-controller="MyCtrl">
+	
+	<h1>WMS Log Aggregation</h1>
+<section id="startSection"  class="loginform cf">
+	<div class="upload-div">
+		<input type="hidden" ng-model="httpMethod" ng-init="httpMethod = 'POST'" value="POST"/>
+
+		<input type="hidden" name="howToSend" ng-model="howToSend" value="1" ng-init="howToSend = 1">
+
+		Upload Properties file(Optional): <input type="file" ng-file-select="onFileSelect($files)">
+		<input type="hidden" ng-model="uploadRightAway">
+        <br/>
+		<br/>
+		<br/>
+		<div ng-show="selectedFiles != null">
+			<div class="sel-file" ng-repeat="f in selectedFiles">
+				<img ng-show="dataUrls[$index]" ng-src="{{dataUrls[$index]}}">
+				<button class="button" ng-click="start($index)" ng-show="progress[$index] < 0">Start</button>
+				<span class="progress" ng-show="progress[$index] >= 0">						
+					<div style="width:{{progress[$index]}}%">{{progress[$index]}}%</div>
+				</span>				
+				<button class="button" ng-click="abort($index)" ng-show="hasUploader($index) && progress[$index] < 100">Abort</button>
+				{{f.name}} - size: {{f.size}}B - type: {{f.type}}
+			</div>
+		</div>
+		
+	</div>
+ <div>
+ </section>
+ 
+
+ <h2>Basic Search Criteria</h2>
+    
+ <section class="loginform cf">
+                <span style="color:red;">{{error}}</span>
+                <form ng-submit="fetchLogReport()">
+                <table>
+                <!-- <tr>
+                <td><label for="cacheData">Cache Data </label></td>
+                <td><input type="checkbox" ng-model="cacheData"> </td>
+                </tr> -->
+                <tr>
+                    <td><label for="Environment">Environment Name</label></td>
+                    <td><select ng-model="envName" ng-options="e for e in env" ng-required="true" ng-change="fetchApplicationNames()"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="Application">Select Application Name</label></td>
+                    <td><select ng-model="appName" ng-options="c for c in apps" ng-change="fetchComponentNames()"></select></td>
+                </tr>
+                <tr>
+                    <td><label for="Component">Select Component(s)</label></td>
+                    </tr><tr ng-repeat="comp in components">
+                    <td>
+                       <input type="checkbox" ng-model="comp.selected"> 
+                       <span>{{comp.name}}</span>
+                    </td>
+                    
+                </tr>
+
+                <tr>
+                
+                    <td ng-repeat="report in availableReports">
+                    
+                        <div ng-switch on="report.name">
+                            <div ng-switch-when="ExceptionName">
+                                <button ng-click="fetchUniqueExceptions(report.name)"><span>{{report.value}}</span></button>
+                            </div>
+                            <div ng-switch-when="TruncatedException">
+                                <button ng-click="fetchUniqueExceptions(report.name)"><span>{{report.value}}</span></button>
+                            </div>
+                            <div ng-switch-when="ExceptionCount">
+                                <button ng-click="fetchExceptionCount(report.name)"><span>{{report.value}}</span></button>
+                            </div>
+                        </div>
+                    
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td><input type="submit" value="Generate Report" disabled="disabled"></td>
+                    <td><input type="submit" value="Show Data Inline"></td>
+                </tr> -->
+            </table>
+        </form>
+        </section>
+        <h2>Extended Search Criteria</h2>
+        <section class="loginform cf">
+        <span style="color:red;">{{errorExpr}}</span>
+        <form ng-submit="fetchExprInformation()">
+            <table>
+              <tr>
+                <td>
+                    <label for="expr">Enter an expression to search</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="expr" placeholder={{exprPlaceHolder}} required>
+                </td>
+                <td><input type="checkbox" ng-model="isRegExpr"><span>Is Regular Expression</span></td>
+                </tr>
+                <tr>
+                <td>
+                    <input type="submit" value="Fetch Logs">
+                </td>
+              </tr>
+            </table>
+         </form>
+         </section>
+         <h2>Fetch Exception Trace</h2>
+         <section class="loginform cf">
+         <form ng-submit="fetchExceptionTrace()">
+         <span style="color:red;">{{errorTrace}}</span>
+            <table>
+              <tr>
+                <td>
+                    <label for="exceptionName">Enter Exception Name</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="exceptionName" placeholder={{ExNamePlaceHolder}} required>
+                </td>
+                <td>
+                    <label for="startDate">Enter Start Date</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="startDate" placeholder="Defaults to Today">
+                </td>
+                <td>
+                    <label for="endDate">Enter End Date</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="endDate" placeholder="Defaults to Now" >
+                </td>
+                <td>
+                    <label for="linesBefore">Lines Before Exception</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="linesBefore" placeholder="Defaults to 0">
+                </td>
+                <td>
+                    <label for="linesAfter">Lines After Exception</label>
+                </td>
+                <td>
+                    <input type="text" ng-model="linesAfter" placeholder="Defaults to 100">
+                </td>
+                </tr>
+                <tr>
+                <td>
+                    <input type="submit" value="Fetch Exception Trace">
+                </td>
+              </tr>
+            </table>
+         </form>
+    </section>
+ 
+ <section id="resultsSection" class="loginform cf">
+ <span style="color:red;">{{fetching}}</span>
+    <table ng-repeat="ex in uniqueExceptions">
+<!--     <tr><td><span>{{ex.compName}}</span></td></tr> -->
+        <tr><td><span style="color:green;background-color:yellow">{{ex.description}}</span></td></tr>
+        <tr ng-repeat="logLine in ex.logLines">        
+        <td>{{logLine}}</td>        
+        </tr>
+
+    </table>
+    <table ng-repeat="ex in exceptionsCount">
+    <!-- <tr><td><span>{{ex.compName}}</span></td></tr> -->
+    <tr><td><span style="color:green;background-color:yellow"">{{ex.description}}</span></td></tr>
+        <tr ng-repeat="exCount in ex.logExceptionCount">
+        <td>{{exCount.statement}}</td>   
+        <td> --></td>
+        <td>{{exCount.count}}</td>     
+        </tr>
+    </table>
+    <table>
+    <tr ng-repeat="log in requestIdData">
+        <td><span>{{log.expression}}</span></td></tr>
+    </table>
+    <table>
+    <tr ng-repeat="log in regularExpressionData">
+        <td><span>{{log.expression}}</span></td></tr>
+    </table>
+    <table ng-repeat="traceData in exceptionTraceData">
+    <tr>
+    <td><span style="color:green;background-color:yellow"">{{traceData.headerInformation}}</span></td></tr>
+    <tr>        
+        <td><pre><span>{{traceData.text}}</span></pre></td>        
+    </tr>        
+    </table>
+    <button ng-click="goUp()"><span>Go to the Top</span></button>
+ </section>
+ </div>
+	
+</body>
+</html>
